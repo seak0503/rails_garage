@@ -27,6 +27,7 @@ gem 'sdoc', '~> 0.4.0',          group: :doc
 gem 'spring',        group: :development
 
 gem 'the_garage', github: 'cookpad/garage'
+gem 'doorkeeper', '1.3.1'
 gem 'kaminari'
 gem 'weak_parameters', '~> 0.1.5'
 
