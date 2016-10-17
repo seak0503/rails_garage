@@ -1,6 +1,10 @@
 class UsersController < ApplicationController
   include Garage::RestfulActions
 
+  def index
+    @users = User.all
+  end
+
   def require_resources
     @resources = User.all
   end
