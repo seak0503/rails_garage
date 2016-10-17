@@ -19,4 +19,52 @@ $ bundle install
 
 ### Rails new
 
-Gemfileで`gem 'garage', github: 'cookpad/garage'`となっているが`gem 'the_garage', github: 'cookpad/garage'`にしないと`bundle install`の際にエラーになる。
+Gemfileで`gem 'garage', github: 'cookpad/garage'`となっているが`gem 'the_garage'`にしないと`bundle install`の際にエラーになる。
+
+
+### リソースの保護
+
+ドキュメントのとおり設定しても下記のテストが落ちる
+
+```
+context 'without owned resource' do
+  let!(:other) { create(:user, name: 'raymonde') }
+
+  it 'returns 403' do
+    put "/v1/users/#{other.id}", params, env
+    expect(response).to have_http_status(403)
+  end
+end
+```
+
+原因はオリジナルのdoorkeeperを使っていたことにあった。
+
+garageのバージョンがあがったことによる影響らしい。
+
+[garageのREADME](https://github.com/cookpad/garage)をよく見ると、[Advanced Configurations](https://github.com/cookpad/garage#advanced-configurations)のところで、garage-doorkeeperを使うよう書かれている。
+
+
+そこで、Gemfileから`doorkeeper`を削除し、`garage-doorkeeper`を追加した後、bundle インストールし、`config/initializer/garage.rb`を下記のように変更したところ、テストがpathした。
+
+* `config/initializer/garage.rb`
+
+```
+Garage.configure {}
+Garage::TokenScope.configure do
+  register :public, desc: 'accessing publicly available data' do
+    access :read, User
+    access :write, User
+  end
+end
+
+Garage.configuration.strategy = Garage::Strategy::Doorkeeper
+Doorkeeper.configure do
+  orm :active_record
+  default_scopes :public
+  optional_scopes(*Garage::TokenScope.optional_scopes)
+
+  resource_owner_from_credentials do |routes|
+    User.find_by(email: params[:username])
+  end
+end
+```
