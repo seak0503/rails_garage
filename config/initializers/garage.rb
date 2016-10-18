@@ -18,3 +18,5 @@ Doorkeeper.configure do
     User.find_by(email: params[:username])
   end
 end
+
+Doorkeeper.configuration.token_grant_types << "password"
