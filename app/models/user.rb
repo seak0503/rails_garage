@@ -7,6 +7,7 @@ class User < ActiveRecord::Base
   property :id
   property :name
   property :email
+  property :hoge
   link(:posts) { user_posts_path(self) }
 
   def self.build_permissions(perms, other, target)
@@ -16,5 +17,9 @@ class User < ActiveRecord::Base
   def build_permissions(perms, other)
     perms.permits! :read
     perms.permits! :write if self == other
+  end
+
+  def hoge
+    true
   end
 end
