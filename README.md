@@ -4,6 +4,8 @@
 
 * ruby 2.2.5
 * mysql
+* rbenvインストール済み
+* rbenv-gemsetインストール済み
 
 ## 使い方
 
@@ -12,7 +14,35 @@ $ git clone git@github.com:seak0503/rails_garage.git
 
 $ cd rails_garage
 
+$ rbenv gemset create 2.2.5 rails_garage
+
 $ bundle install
+
+$ bin/rake db:create
+
+$ bin/rake db:migrate
+
+$ bundle exec rspec # すべてのテストが通ることを確認
+```
+
+## APIの動きを確認する
+
+```
+$ rails runner 'User.create(name: "alice", email: "alice@example.com")' # creating test user
+
+$ rails s
+
+open http://localhost:3000/oauth/applications # Then create test application
+
+$ curl -u "$APPLICTION_ID:$APPLICATION_SECRET" -XPOST http://localhost:3000/oauth/token -d 'grant_type=password&username=alice@example.com' # Then you got access token
+
+$ curl -XGET -H "Authorization: Bearer $ACCESS_TOKEN" http://localhost:3000/v1/users
+```
+
+## API ドキュメント生成
+
+```
+$ AUTODOC=1 bin/rspec
 ```
 
 ## 補足
