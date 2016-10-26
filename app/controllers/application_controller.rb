@@ -11,4 +11,11 @@ class ApplicationController < ActionController::Base
   rescue_from WeakParameters::ValidationError do
     head 400
   end
+
+  rescue_from ActiveRecord::RecordNotFound, with: :rescue404
+
+  private
+  def rescue404(e)
+    render json: { status_code: 404, error: "Not Found" }, status: 404
+  end
 end
