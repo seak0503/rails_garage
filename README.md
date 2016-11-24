@@ -16,13 +16,15 @@ $ cd rails_garage
 
 $ rbenv gemset create 2.2.5 rails_garage
 
-$ bundle install
+$ gem install bundler
+
+$ bundle install --path vendor/bundle
 
 $ bin/rake db:create
 
 $ bin/rake db:migrate
 
-$ bundle exec rspec # すべてのテストが通ることを確認
+$ bin/rspec # すべてのテストが通ることを確認
 ```
 
 ## APIの動きを確認する
