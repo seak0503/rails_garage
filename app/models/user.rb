@@ -8,6 +8,7 @@ class User < ActiveRecord::Base
   property :name
   property :email
   property :hoge
+  collection :posts
   link(:posts) { user_posts_path(self) }
 
   def self.build_permissions(perms, other, target)
