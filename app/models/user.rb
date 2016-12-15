@@ -7,7 +7,6 @@ class User < ActiveRecord::Base
   property :id
   property :name
   property :email
-  property :hoge
   collection :posts
   link(:posts) { user_posts_path(self) }
 
