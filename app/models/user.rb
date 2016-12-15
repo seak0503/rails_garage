@@ -18,8 +18,4 @@ class User < ActiveRecord::Base
     perms.permits! :read
     perms.permits! :write if self == other
   end
-
-  def hoge
-    true
-  end
 end
