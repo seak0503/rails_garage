@@ -27,6 +27,6 @@ class ApplicationController < ActionController::Base
 
   private
   def rescue404(e)
-    render json: { status_code: 404, error: "Not Found" }, status: 404
+    render json: { error: "Not Found", error_description: "リンクが不正か、ご指定のページが見つかりません。" }, status: 404
   end
 end
