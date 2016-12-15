@@ -9,11 +9,19 @@ class UsersController < ApplicationController
     @resource = User.find(params[:id])
   end
 
+  def create_resource
+    @resources.create(user_params)
+  end
+
   def update_resource
     @resource.update_attributes!(user_params)
   end
 
+  def destroy_resource
+    @resource.destroy!
+  end
+
   def user_params
-    params.permit(:name)
+    params.permit(:name, :email)
   end
 end
