@@ -6,12 +6,25 @@ module ErrorHandlers
     rescue_from ApplicationController::Forbidden, with: :rescue403
     rescue_from ActionController::RoutingError, with: :rescue404
     rescue_from ActiveRecord::RecordNotFound, with: :rescue404
+    rescue_from ActiveRecord::RecordInvalid, with: :rescue400
+
   end
 
   private
   def rescue400(e)
     @exception = e
-    render json: { error: "Bad Request", error_description: "不正な要求です。" }, status: 400
+    case @exception
+    when ActiveRecord::RecordInvalid
+      errors = []
+      @exception.record.errors.messages.each do |k,v|
+        v.each do |m|
+          errors.push({message: "#{k} #{m}", type: @exception.class.to_s.split('::').last, more_info:""})
+        end
+      end
+      render json: { errors: errors }, status: 400
+    else
+      render json: { error: "Bad Request", error_description: "不正な要求です。" }, status: 400
+    end
   end
   def rescue404(e)
     @exception = e

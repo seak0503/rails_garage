@@ -10,7 +10,7 @@ class UsersController < ApplicationController
   end
 
   def create_resource
-    @resources.create(user_params)
+    @resources.create!(user_params)
   end
 
   def update_resource
