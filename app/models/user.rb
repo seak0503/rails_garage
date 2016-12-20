@@ -10,6 +10,9 @@ class User < ActiveRecord::Base
   collection :posts
   link(:posts) { user_posts_path(self) }
 
+  validates :name, presence: true, uniqueness: { allow_blank: true }
+  validates :email, presence: true
+
   def self.build_permissions(perms, other, target)
     perms.permits! :read
   end
