@@ -13,18 +13,19 @@ module ErrorHandlers
   private
   def rescue400(e)
     @exception = e
+    @type = @exception.class.to_s.split('::').last
+    @errors = []
     case @exception
     when ActiveRecord::RecordInvalid
-      errors = []
       @exception.record.errors.messages.each do |k,v|
         v.each do |m|
-          errors.push({message: "#{k} #{m}", type: @exception.class.to_s.split('::').last, more_info:""})
+          @errors.push({message: "#{k} #{m}", type: @type, more_info:""})
         end
       end
-      render json: { errors: errors }, status: 400
     else
-      render json: { error: "Bad Request", error_description: "不正な要求です。" }, status: 400
+      @errors.push({message: "不正な要求です。", type: @type, more_info: ""})
     end
+    render json: { errors: @errors }, status: 400
   end
   def rescue404(e)
     @exception = e
