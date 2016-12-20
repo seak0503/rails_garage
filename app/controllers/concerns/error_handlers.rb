@@ -29,7 +29,10 @@ module ErrorHandlers
   end
   def rescue404(e)
     @exception = e
-    render json: { error: "Not Found", error_description: "リンクが不正か、ご指定のページが見つかりません。" }, status: 404
+    @type = @exception.class.to_s.split('::').last
+    @message = "リンクが不正か、ご指定のページが見つかりません。"
+    @more_info = ""
+    render json: { errors: [ message: @message, type: @type, more_info: @more_info ] }, status: 404
   end
   def rescue403(e)
     @exception = e
