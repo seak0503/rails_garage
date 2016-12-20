@@ -43,6 +43,9 @@ module ErrorHandlers
   end
   def rescue500(e)
     @exception = e
-    render json: { error: "Internal Server Error", error_description: "システムエラーが発生しました。" }, status: 500
+    @type = @exception.class.to_s.split('::').last
+    @message = "システムエラーが発生しました。"
+    @more_info = ""
+    render json: { errors: [ message: @message, type: @type, more_info: @more_info ] }, status: 500
   end
 end
