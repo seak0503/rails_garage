@@ -8,4 +8,7 @@ Rails.application.routes.draw do
 
     resources :posts
   end
+
+  root 'errors#not_found'
+  get '*anything' => 'errors#not_found'
 end
