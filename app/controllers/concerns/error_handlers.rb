@@ -36,7 +36,10 @@ module ErrorHandlers
   end
   def rescue403(e)
     @exception = e
-    render json: { error: "Forbidden", error_description: "ご指定のページを閲覧する権限がありません。" }, status: 403
+    @type = @exception.class.to_s.split('::').last
+    @message = "ご指定のページを閲覧する権限がありません。"
+    @more_info = ""
+    render json: { errors: [ message: @message, type: @type, more_info: @more_info ] }, status: 403
   end
   def rescue500(e)
     @exception = e
